@@ -38,8 +38,7 @@
         <activity
             android:name=".FormActivity"
             android:label="@string/app_form"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:theme="@style/AppTheme.NoActionBar"/>
         <!-- Mapa -->
         <activity
             android:name=".MapActivity"
