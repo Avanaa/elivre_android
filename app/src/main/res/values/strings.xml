@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Elivre</string>
+    <string name="app_form">Formulário</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_map">Map</string>
+    <string name="app_map">Mapa</string>
+</resources>
