@@ -11,9 +11,11 @@ public class PostModel implements Serializable, Comparable<PostModel> {
 
     private String id;
     private Date dataHora;
+    private String dataString;
     private String titulo;
     private String descricao;
     private Avaliacao avaliacao;
+    private String avaliacaoString;
     private String usuario;
     private double lat;
     private double lng;
@@ -80,6 +82,22 @@ public class PostModel implements Serializable, Comparable<PostModel> {
 
     public void setLat(double lat) {
         this.lat = lat;
+    }
+
+    public String getDataString() {
+        return dataString;
+    }
+
+    public void setAvaliacaoString(String avaliacaoString) {
+        this.avaliacaoString = avaliacaoString;
+    }
+
+    public String getAvaliacaoString() {
+        return avaliacaoString;
+    }
+
+    public void setDataString(String dataString) {
+        this.dataString = dataString;
     }
 
     @Override

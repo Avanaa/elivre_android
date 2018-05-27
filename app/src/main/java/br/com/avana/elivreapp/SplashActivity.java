@@ -23,7 +23,7 @@ public class SplashActivity extends Activity {
     }
 
     private void goMap(){
-        //Intent intent = new Intent(getApplicationContext(), FormActivity.class);
+//        Intent intent = new Intent(getApplicationContext(), FormActivity.class);
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         startActivity(intent);
     }
