@@ -38,19 +38,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolder> {
         switch(post.getAvaliacao()){
 
             case FELIZ:
-                holder.setImage(R.drawable.ic_happy_face);
+                holder.setImage(R.drawable.ic_laughing_face_color);
                 break;
 
             case CU:
-                holder.setImage(R.drawable.ic_poker_face);
+                holder.setImage(R.drawable.ic_poker_face_color);
                 break;
 
             case PUTO:
-                holder.setImage(R.drawable.ic_angry_face);
+                holder.setImage(R.drawable.ic_angry_face_color);
                 break;
 
             case LIVRE:
-                holder.setImage(R.drawable.ic_free);
+                holder.setImage(R.drawable.ic_free_color);
                 break;
         }
     }

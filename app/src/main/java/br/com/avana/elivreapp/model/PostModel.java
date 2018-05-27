@@ -15,8 +15,8 @@ public class PostModel implements Serializable, Comparable<PostModel> {
     private String descricao;
     private Avaliacao avaliacao;
     private String usuario;
-    private long lat;
-    private long lng;
+    private double lat;
+    private double lng;
 
     public String getId() {
         return id;
@@ -66,19 +66,19 @@ public class PostModel implements Serializable, Comparable<PostModel> {
         this.usuario = usuario;
     }
 
-    public long getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public long getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(long lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
-    public void setLat(long lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 

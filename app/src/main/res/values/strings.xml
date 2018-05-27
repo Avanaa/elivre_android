@@ -4,4 +4,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_map">Map</string>
     <string name="app_map">Mapa</string>
+    <string name="form_evaluation_angry">Fui estuprado pelos flanelinhas</string>
+    <string name="form_evaluation_neutral">Flanelinhas nem fedem nem cheiram</string>
+    <string name="form_evaluation_happy">Flanelinhas gostosos</string>
+    <string name="form_evaluation_free">Livre pra caralho</string>
 </resources>
