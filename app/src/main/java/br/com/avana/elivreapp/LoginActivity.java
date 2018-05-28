@@ -1,11 +1,8 @@
 package br.com.avana.elivreapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,13 +11,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,8 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         auth = FirebaseAuth.getInstance();
 
@@ -117,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, user.getEmail(), Toast.LENGTH_LONG).show();
             Intent goMap = new Intent(this, MapActivity.class);
             startActivity(goMap);
+            finish();
         }
     }
 }

@@ -38,9 +38,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(final GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap map) {
 
-        this.googleMap = googleMap;
+        this.googleMap = map;
 
         // Set MyLocationButton true
         if (ActivityCompat.checkSelfPermission(

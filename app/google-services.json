@@ -25,7 +25,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTSXI6XdGO02-Qzst_ZPxo8gdOsBT0_vU"
+          "current_key": "AIzaSyCP_q0Sa5ECGtmARkfI92E9EGWPeopraTQ"
         }
       ],
       "services": {
@@ -50,6 +50,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "645646021352-j8glg54l60ina51c8ubl59rog9c1o17n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.avana.elivreapp",
+            "certificate_hash": "05459714105495e8f6dce933637559a632cff3c7"
+          }
+        },
+        {
           "client_id": "645646021352-couhlsdlb37q6409kl9egngi60umiqj7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -68,7 +76,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTSXI6XdGO02-Qzst_ZPxo8gdOsBT0_vU"
+          "current_key": "AIzaSyCP_q0Sa5ECGtmARkfI92E9EGWPeopraTQ"
         }
       ],
       "services": {
