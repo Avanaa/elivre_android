@@ -23,8 +23,9 @@ public class SplashActivity extends Activity {
     }
 
     private void goMap(){
+        //Intent intent = new Intent(getApplicationContext(), FormActivity.class);
+        //Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
