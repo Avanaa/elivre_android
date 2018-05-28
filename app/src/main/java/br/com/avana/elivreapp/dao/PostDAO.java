@@ -46,7 +46,7 @@ public class PostDAO {
             update(post);
         } else {
             post.setId(myRef.push().getKey());
-            myRef.child("Posts").child(post.getId()).setValue(post);
+            myRef.child(post.getId()).setValue(post);
         }
     }
 
