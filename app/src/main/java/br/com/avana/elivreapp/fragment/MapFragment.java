@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import br.com.avana.elivreapp.FormActivity;
+import br.com.avana.elivreapp.ListActivity;
 import br.com.avana.elivreapp.util.Localizer;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
@@ -24,6 +25,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public final static int OPEN_LOCALIZER = 2;
 
     public final static int GO_FORM = 3;
+    public final static int GO_LIST = 4;
+
 
     private GoogleMap googleMap;
 
@@ -76,9 +79,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Intent intentGoForm = new Intent(getContext(), FormActivity.class);
-                intentGoForm.putExtra("position", latLng);
-                startActivityForResult(intentGoForm, 2);
+                Intent intentGoList = new Intent(getContext(), ListActivity.class);
+                intentGoList.putExtra("position", latLng);
+                startActivityForResult(intentGoList, GO_LIST);
             }
         });
 
@@ -139,6 +142,10 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             switch (requestCode){
                 case GO_FORM:
                     //Insert new post on map
+                    break;
+
+                case GO_LIST:
+                    // Do Nothing
                     break;
             }
         }
