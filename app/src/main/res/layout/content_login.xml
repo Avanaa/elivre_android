@@ -17,13 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Facebook"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Twitter"/>
+            android:text="Facebook"
+            android:id="@+id/login_twitter"/>
 
         <Button
             android:layout_width="match_parent"
@@ -31,6 +26,13 @@
             android:layout_margin="20dp"
             android:text="Google +"
             android:id="@+id/login_google"/>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Twitter"/>
     </LinearLayout>
 
     

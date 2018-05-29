@@ -1,4 +1,10 @@
 <resources>
+
+    <string name="facebook_app_id">431921443886958</string>
+    <string name="fb_login_protocol_scheme">fb431921443886958</string>
+
+
+
     <string name="app_name">Elivre</string>
     <string name="app_form">Formulário</string>
     <string name="action_settings">Settings</string>
