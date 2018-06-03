@@ -15,16 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 
-import br.com.avana.elivreapp.R;
 import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
@@ -41,6 +35,7 @@ public class FormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_form);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.form_toolbar);
@@ -106,7 +101,6 @@ public class FormActivity extends AppCompatActivity {
 
         editText_title = (EditText) findViewById(R.id.form_title);
         editText_description = (EditText) findViewById(R.id.form_description);
-        postDAO = new PostDAO();
     }
 
     @Override
@@ -138,10 +132,9 @@ public class FormActivity extends AppCompatActivity {
         post.setTitulo(editText_title.getText().toString());
         post.setDescricao(editText_description.getText().toString());
         post.setDataString(datetime);
-        post.setUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        //post.setUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        postDAO.save(post);
-
+        new PostDAO().save(post);
         inserirFirebaseSucesso();
     }
 

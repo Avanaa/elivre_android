@@ -9,7 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,18 +24,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 import br.com.avana.elivreapp.FormActivity;
 import br.com.avana.elivreapp.ListActivity;
@@ -47,7 +50,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private GoogleMap googleMap;
     private DatabaseReference mRef;
-    private ClusterManager<PostModel> clusterManager;
+    private PlaceAutocompleteFragment autoCompleteFragment;
+    //private ClusterManager<PostModel> clusterManager;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -64,6 +68,68 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //clusterManager = new ClusterManager<PostModel>(getActivity(), this.googleMap);
         //this.googleMap.setOnCameraIdleListener(clusterManager);
         //this.googleMap.setOnMarkerClickListener(clusterManager);
+
+        // Set MyLocationButton true
+        if (ActivityCompat.checkSelfPermission(
+                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, MY_LOCATION_ENABLE);
+        } else {
+            this.googleMap.setMyLocationEnabled(true);
+        }
+
+        // Click MyLocation button
+        this.googleMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            }
+        });
+
+        // Long click Map
+        this.googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Intent intentGoForm = new Intent(getActivity(), FormActivity.class);
+                intentGoForm.putExtra("position", latLng);
+                startActivityForResult(intentGoForm, GO_FORM);
+            }
+        });
+
+        // Click Map
+        this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                //Intent intentGoList = new Intent(getActivity(), ListActivity.class);
+                //intentGoList.putExtra("position", latLng);
+                //startActivityForResult(intentGoList, GO_LIST);
+
+                Intent intentGoForm = new Intent(getActivity(), FormActivity.class);
+                intentGoForm.putExtra("position", latLng);
+                startActivityForResult(intentGoForm, GO_FORM);
+            }
+        });
+
+        // Open localize provider
+        if (ActivityCompat.checkSelfPermission(
+                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, OPEN_LOCALIZER);
+        } else {
+            new Localizer(getActivity(), googleMap);
+        }
+
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
         mRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -111,61 +177,21 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
 
-        // Set MyLocationButton true
-        if (ActivityCompat.checkSelfPermission(
-                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        autoCompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, MY_LOCATION_ENABLE);
-        } else {
-            this.googleMap.setMyLocationEnabled(true);
-        }
+        autoCompleteFragment.setFilter(new AutocompleteFilter.Builder()
+                .setCountry("BR")
+                .build());
 
-        // Click MyLocation button
-        this.googleMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+        autoCompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onMyLocationClick(@NonNull Location location) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            public void onPlaceSelected(Place place) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 18));
             }
-        });
 
-        // Long click Map
-        this.googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
-                Intent intentGoForm = new Intent(getActivity(), FormActivity.class);
-                intentGoForm.putExtra("position", latLng);
-                startActivityForResult(intentGoForm, GO_FORM);
-            }
+            public void onError(Status status) {}
         });
-
-        // Click Map
-        this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Intent intentGoList = new Intent(getActivity(), ListActivity.class);
-                intentGoList.putExtra("position", latLng);
-                startActivityForResult(intentGoList, GO_LIST);
-            }
-        });
-
-        // Open localize provider
-        if (ActivityCompat.checkSelfPermission(
-                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, OPEN_LOCALIZER);
-        } else {
-            new Localizer(getActivity(), googleMap);
-        }
     }
 
     @Override

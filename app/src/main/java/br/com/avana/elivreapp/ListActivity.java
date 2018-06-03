@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_toolbar);

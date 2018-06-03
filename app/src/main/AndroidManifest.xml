@@ -73,4 +73,7 @@
             android:theme="@style/AppTheme.FullScreen"/>
     </application>
 
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="af849443e3ceb1a93bfe50b2ef9a2ed89db8470b" />
 </manifest>

@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.facebook.appevents.AppEventsLogger;
 
-
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -42,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
         AppEventsLogger.activateApp(getApplication());
         auth = FirebaseAuth.getInstance();
