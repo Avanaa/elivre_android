@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.avana.elivreapp.adapter.PostAdapter;
 import br.com.avana.elivreapp.model.PostModel;
@@ -17,11 +19,13 @@ public class ListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private PostAdapter adapter;
+    private List<PostModel> lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_toolbar);
@@ -29,11 +33,16 @@ public class ListActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_list);
 
+        lista = new ArrayList<PostModel>();
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(manager);
 
-        adapter = new PostAdapter(new ArrayList<PostModel>(0));
+        adapter = new PostAdapter(lista);
         recyclerView.setAdapter(adapter);
+
+        if (lista.size() < 1){
+            findViewById(R.id.list_empty).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

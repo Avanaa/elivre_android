@@ -7,16 +7,34 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import br.com.avana.elivreapp.FormActivity;
 import br.com.avana.elivreapp.ListActivity;
+import br.com.avana.elivreapp.R;
+import br.com.avana.elivreapp.model.Avaliacao;
+import br.com.avana.elivreapp.model.PostModel;
 import br.com.avana.elivreapp.util.Localizer;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
@@ -27,14 +45,15 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public final static int GO_FORM = 3;
     public final static int GO_LIST = 4;
 
-
     private GoogleMap googleMap;
+    private DatabaseReference mRef;
+    private ClusterManager<PostModel> clusterManager;
 
     @Override
     public void onCreate(Bundle bundle) {
-
         super.onCreate(bundle);
         getMapAsync(this);
+        mRef = FirebaseDatabase.getInstance().getReference("Posts");
     }
 
     @Override
@@ -42,10 +61,60 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
         this.googleMap = map;
 
+        //clusterManager = new ClusterManager<PostModel>(getActivity(), this.googleMap);
+        //this.googleMap.setOnCameraIdleListener(clusterManager);
+        //this.googleMap.setOnMarkerClickListener(clusterManager);
+
+        mRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                PostModel post = dataSnapshot.getValue(PostModel.class);
+                MarkerOptions options = new MarkerOptions();
+
+                options.position(post.getPosition());
+                options.title(post.getTitle());
+                options.snippet(post.getSnippet());
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_free);
+
+                if (post.getAvaliacao() == Avaliacao.ANGRY_FACE){
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_angry);
+                }
+
+                if (post.getAvaliacao() == Avaliacao.NEUTRAL_FACE){
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_neutral);
+                }
+
+                if (post.getAvaliacao() == Avaliacao.HAPPY_FACE){
+                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_happy);
+                }
+
+                options.icon(bitmapDescriptor);
+
+                googleMap.addMarker(options);
+
+                //clusterManager.addItem(data.getValue(PostModel.class));
+                //clusterManager.cluster();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
         // Set MyLocationButton true
         if (ActivityCompat.checkSelfPermission(
                 getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(getActivity(), new String[]{
@@ -60,26 +129,25 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         this.googleMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(location.getLatitude(), location.getLongitude()), 15));
             }
         });
 
-        // Click Map
+        // Long click Map
         this.googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Intent intentGoForm = new Intent(getContext(), FormActivity.class);
+                Intent intentGoForm = new Intent(getActivity(), FormActivity.class);
                 intentGoForm.putExtra("position", latLng);
                 startActivityForResult(intentGoForm, GO_FORM);
             }
         });
 
-        // Long click Map
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        // Click Map
+        this.googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Intent intentGoList = new Intent(getContext(), ListActivity.class);
+                Intent intentGoList = new Intent(getActivity(), ListActivity.class);
                 intentGoList.putExtra("position", latLng);
                 startActivityForResult(intentGoList, GO_LIST);
             }
@@ -102,7 +170,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
 
@@ -138,7 +205,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK){
-
             switch (requestCode){
                 case GO_FORM:
                     //Insert new post on map

@@ -9,6 +9,7 @@ import java.util.List;
 
 import br.com.avana.elivreapp.R;
 import br.com.avana.elivreapp.adapter.holder.PostHolder;
+import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 
 public class PostAdapter extends RecyclerView.Adapter<PostHolder> {
@@ -32,24 +33,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolder> {
         //Geocoder geo = new Geocoder(context, Locale.getDefault());
 
         //holder.setLocal();
-        holder.setData(post.getDataHora().toString());
+        holder.setData(post.getDataString());
         holder.setUsuario(post.getUsuario());
 
         switch(post.getAvaliacao()){
 
-            case FELIZ:
+            case Avaliacao.HAPPY_FACE:
                 holder.setImage(R.drawable.ic_laughing_face_color);
                 break;
 
-            case CU:
+            case Avaliacao.NEUTRAL_FACE:
                 holder.setImage(R.drawable.ic_poker_face_color);
                 break;
 
-            case PUTO:
+            case Avaliacao.ANGRY_FACE:
                 holder.setImage(R.drawable.ic_angry_face_color);
                 break;
 
-            case LIVRE:
+            case Avaliacao.FREE:
                 holder.setImage(R.drawable.ic_free_color);
                 break;
         }

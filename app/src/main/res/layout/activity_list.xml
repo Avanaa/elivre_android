@@ -21,6 +21,8 @@
 
     <include layout="@layout/content_list" />
 
+    <include layout="@layout/content_list_empty" />
+
     <!--
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

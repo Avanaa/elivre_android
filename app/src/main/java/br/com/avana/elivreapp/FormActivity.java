@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,6 +26,7 @@ import java.util.HashMap;
 
 import br.com.avana.elivreapp.R;
 import br.com.avana.elivreapp.dao.PostDAO;
+import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 
 public class FormActivity extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class FormActivity extends AppCompatActivity {
     private PostModel post;
     private PostDAO postDAO;
     private EditText editText_title, editText_description;
+    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class FormActivity extends AppCompatActivity {
 
         post = new PostModel();
 
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         if (extras != null){
             position = (LatLng) extras.get("position");
 
@@ -66,7 +70,7 @@ public class FormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 imgFeddback.setImageResource(R.drawable.ic_angry_face_color);
                 desc.setText(R.string.form_evaluation_angry);
-                post.setAvaliacaoString("angry");
+                post.setAvaliacao(Avaliacao.ANGRY_FACE);
             }
         });
 
@@ -76,7 +80,7 @@ public class FormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 imgFeddback.setImageResource(R.drawable.ic_poker_face_color);
                 desc.setText(R.string.form_evaluation_neutral);
-                post.setAvaliacaoString("poker");
+                post.setAvaliacao(Avaliacao.NEUTRAL_FACE);
             }
         });
 
@@ -86,7 +90,7 @@ public class FormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 imgFeddback.setImageResource(R.drawable.ic_laughing_face_color);
                 desc.setText(R.string.form_evaluation_happy);
-                post.setAvaliacaoString("happy");
+                post.setAvaliacao(Avaliacao.HAPPY_FACE);
             }
         });
 
@@ -96,7 +100,7 @@ public class FormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 imgFeddback.setImageResource(R.drawable.ic_free_color);
                 desc.setText(R.string.form_evaluation_free);
-                post.setAvaliacaoString("free");
+                post.setAvaliacao(Avaliacao.FREE);
             }
         });
 
@@ -124,6 +128,7 @@ public class FormActivity extends AppCompatActivity {
     }
 
     private void inserirFirebase(){
+
         // data formatada em uma string
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-mm-dd H:mm:ss");
@@ -133,6 +138,8 @@ public class FormActivity extends AppCompatActivity {
         post.setTitulo(editText_title.getText().toString());
         post.setDescricao(editText_description.getText().toString());
         post.setDataString(datetime);
+        post.setUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
         postDAO.save(post);
 
         inserirFirebaseSucesso();
@@ -141,12 +148,10 @@ public class FormActivity extends AppCompatActivity {
     private void inserirFirebaseSucesso(){
         AlertDialog.Builder alert = new AlertDialog.Builder(FormActivity.this);
         alert.setTitle("Enviado!");
-         alert.setMessage("Ocrrência enviada com sucesso.");
+        alert.setMessage("Ocorrência enviada com sucesso.");
         alert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(getApplicationContext(), FormActivity.class);
-//                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
         alert.show();

@@ -1,21 +1,18 @@
 package br.com.avana.elivreapp.model;
 
-import android.support.annotation.NonNull;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 
-public class PostModel implements Serializable, Comparable<PostModel> {
+public class PostModel implements Serializable, ClusterItem {
 
     private String id;
-    private Date dataHora;
     private String dataString;
     private String titulo;
     private String descricao;
-    private Avaliacao avaliacao;
-    private String avaliacaoString;
+    private int avaliacao;
     private String usuario;
     private double lat;
     private double lng;
@@ -26,14 +23,6 @@ public class PostModel implements Serializable, Comparable<PostModel> {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Date getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
     }
 
     public String getTitulo() {
@@ -52,11 +41,11 @@ public class PostModel implements Serializable, Comparable<PostModel> {
         this.descricao = descricao;
     }
 
-    public Avaliacao getAvaliacao() {
+    public int getAvaliacao() {
         return avaliacao;
     }
 
-    public void setAvaliacao(Avaliacao avaliacao) {
+    public void setAvaliacao(int avaliacao) {
         this.avaliacao = avaliacao;
     }
 
@@ -88,14 +77,6 @@ public class PostModel implements Serializable, Comparable<PostModel> {
         return dataString;
     }
 
-    public void setAvaliacaoString(String avaliacaoString) {
-        this.avaliacaoString = avaliacaoString;
-    }
-
-    public String getAvaliacaoString() {
-        return avaliacaoString;
-    }
-
     public void setDataString(String dataString) {
         this.dataString = dataString;
     }
@@ -114,13 +95,17 @@ public class PostModel implements Serializable, Comparable<PostModel> {
     }
 
     @Override
-    public int compareTo(@NonNull PostModel o) {
-        if (this.getDataHora().before(o.getDataHora())){
-            return -1;
-        } else if (this.getDataHora().after(o.getDataHora())){
-            return 1;
-        } else{
-            return 0;
-        }
+    public LatLng getPosition() {
+        return new LatLng(getLat(), getLng());
+    }
+
+    @Override
+    public String getTitle() {
+        return getTitulo();
+    }
+
+    @Override
+    public String getSnippet() {
+        return getDescricao();
     }
 }

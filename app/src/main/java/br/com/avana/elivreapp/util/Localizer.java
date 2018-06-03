@@ -45,7 +45,6 @@ public class Localizer extends LocationCallback {
 
     @Override
     public void onLocationResult(LocationResult locationResult) {
-        //Toast.makeText(activity, "Localização encontrada", Toast.LENGTH_LONG).show();
         Location currentLocation = (Location) locationResult.getLastLocation();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
     }
