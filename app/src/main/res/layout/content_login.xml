@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout 
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:background="@drawable/bg"
         android:gravity="center_vertical"
-        android:background="@drawable/bg">
+        android:orientation="vertical"
+        >
+        <!--tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">-->
 
-        <!--<Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Facebook"
-            android:id="@+id/login_twitter"/>-->
 
         <Button
+            android:id="@+id/login_twitter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:background="@drawable/com_facebook_button_background"
+            android:elevation="1dp"
+            android:text="Facebook"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/login_google"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="#dd5144"
             android:text="Google +"
-            android:id="@+id/login_google"/>
+            android:textColor="#fff" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Twitter"/>
+            android:text="Twitter" />
+
     </LinearLayout>
 
-    
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
@@ -10,43 +11,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border"
         android:orientation="horizontal"
-        android:padding="4dp">
+        android:padding="4dp"
+        >
+
 
         <ImageView
+            android:id="@+id/item_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_free_color"
             android:fitsSystemWindows="true"
-            android:id="@+id/item_img"/>
+            android:src="@drawable/ic_free_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingStart="8dp"
-            android:layout_gravity="center_vertical">
+            android:paddingStart="8dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/item_local"
-                android:textSize="20sp"
-                android:text="Local"/>
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Local"
+                android:textSize="20sp" />
+
+            <TextView
                 android:id="@+id/item_data"
-                android:textSize="16sp"
-                android:text="Data"/>
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Data"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/item_usuario_nome"
-                android:textSize="16sp"
-                android:text="Nome"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nome"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

@@ -16,9 +16,11 @@ public class SplashActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
-
+        Fabric fabric = Fabric.with(this, new Crashlytics());
+        Crashlytics.log("Fabric instanciado. Versão: "+fabric.getVersion());
+        //ex();
         setContentView(R.layout.activity_splash);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -29,10 +31,15 @@ public class SplashActivity extends Activity {
     }
 
     private void goMap(){
+
         //Intent intent = new Intent(getApplicationContext(), FormActivity.class);
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void ex(){
+        throw new RuntimeException("Falha");
     }
 }
