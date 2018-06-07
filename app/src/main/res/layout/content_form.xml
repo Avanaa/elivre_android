@@ -9,116 +9,43 @@
     tools:showIn="@layout/activity_form">
 
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/form_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:textSize="18sp"/>
 
-            <EditText
-                android:id="@+id/form_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/border"
-                android:hint="Escreva um título"
-                android:padding="15dp" />
+        <EditText
+            android:id="@+id/form_description"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:hint="Deixe um feedback sobre o local (opcional)"
+            android:paddingStart="4dp"/>
 
-            <EditText
-                android:id="@+id/form_description"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/border"
-                android:hint="O que ocorreu?"
-                android:padding="15dp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/form_btn_angry_face"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:adjustViewBounds="true"
-                    android:background="#eeeeee"
-                    android:padding="0dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_bg_angry_face" />
+            <ImageView
+                android:id="@+id/form_feedback"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:fitsSystemWindows="true"/>
 
-                <ImageButton
-                    android:id="@+id/form_btn_poker_face"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:adjustViewBounds="true"
-                    android:background="#eeeeee"
-                    android:padding="0dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_bg_poker_face" />
-
-                <ImageButton
-                    android:id="@+id/form_btn_happy_face"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:adjustViewBounds="true"
-                    android:background="#eeeeee"
-                    android:padding="0dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_bg_laughing_face" />
-
-                <ImageButton
-                    android:id="@+id/form_btn_free"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:adjustViewBounds="true"
-                    android:background="#eeeeee"
-                    android:padding="0dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_bg_free" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="18dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/form_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:textSize="20dp" />
-
-                <ImageView
-                    android:id="@+id/form_feedback"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:fitsSystemWindows="true"
-                    android:src="@drawable/ic_free_gray" />
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

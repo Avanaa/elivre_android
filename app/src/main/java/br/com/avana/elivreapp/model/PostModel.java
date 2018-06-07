@@ -10,9 +10,9 @@ public class PostModel implements Serializable, ClusterItem {
 
     private String id;
     private String dataString;
-    private String titulo;
-    private String descricao;
-    private int avaliacao;
+    private String title;
+    private String snippet;
+    private Avaliacao avaliacao;
     private String usuario;
     private double lat;
     private double lng;
@@ -25,28 +25,13 @@ public class PostModel implements Serializable, ClusterItem {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public int getAvaliacao() {
+    public Avaliacao getAvaliacao() {
         return avaliacao;
     }
 
-    public void setAvaliacao(int avaliacao) {
+    public void setAvaliacao(Avaliacao avaliacao) {
         this.avaliacao = avaliacao;
+        this.title = avaliacao.getDescricao();
     }
 
     public String getUsuario() {
@@ -81,6 +66,10 @@ public class PostModel implements Serializable, ClusterItem {
         this.dataString = dataString;
     }
 
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,11 +90,11 @@ public class PostModel implements Serializable, ClusterItem {
 
     @Override
     public String getTitle() {
-        return getTitulo();
+        return getAvaliacao().getDescricao();
     }
 
     @Override
     public String getSnippet() {
-        return getDescricao();
+        return snippet;
     }
 }

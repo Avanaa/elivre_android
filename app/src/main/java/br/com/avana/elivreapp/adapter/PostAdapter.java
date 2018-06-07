@@ -36,7 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostHolder> {
         holder.setData(post.getDataString());
         holder.setUsuario(post.getUsuario());
 
-        switch(post.getAvaliacao()){
+        switch(post.getAvaliacao().getAvaliacao()){
 
             case Avaliacao.HAPPY_FACE:
                 holder.setImage(R.drawable.ic_laughing_face_color);

@@ -16,6 +16,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import static br.com.avana.elivreapp.fragment.MapFragment.MY_LOCATION_ENABLE;
+
 public class Localizer extends LocationCallback {
 
     private GoogleMap map;
@@ -29,15 +31,19 @@ public class Localizer extends LocationCallback {
 
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setSmallestDisplacement(50);
-        locationRequest.setInterval(3000);
-        locationRequest.setFastestInterval(3000);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
 
         if (ActivityCompat.checkSelfPermission(this.activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.activity,
+                != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this.activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+
+            ActivityCompat.requestPermissions(activity, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, MY_LOCATION_ENABLE);
         }
         providerClient = LocationServices.getFusedLocationProviderClient(this.activity);
         providerClient.requestLocationUpdates(locationRequest, this, Looper.myLooper());
@@ -48,4 +54,6 @@ public class Localizer extends LocationCallback {
         Location currentLocation = (Location) locationResult.getLastLocation();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
     }
+
+
 }

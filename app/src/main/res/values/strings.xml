@@ -88,4 +88,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Login</string>
+    <string name="form_datetime_format">yyyy-mm-dd H:mm:ss</string>
 </resources>

@@ -1,24 +1,28 @@
 package br.com.avana.elivreapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
@@ -30,6 +34,7 @@ public class FormActivity extends AppCompatActivity {
     private PostDAO postDAO;
     private EditText editText_title, editText_description;
     private Bundle extras;
+    private Avaliacao avaliacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,64 +48,50 @@ public class FormActivity extends AppCompatActivity {
 
         post = new PostModel();
 
+        final ImageView imgFeddback = findViewById(R.id.form_feedback);
+        final TextView desc = findViewById(R.id.form_desc);
+
         extras = getIntent().getExtras();
         if (extras != null){
             position = (LatLng) extras.get("position");
+            avaliacao = (Avaliacao) extras.get("avaliacao");
 
             if (position != null){
                 post.setLat(position.latitude);
                 post.setLng(position.longitude);
             }
+
+            if (avaliacao != null){
+
+                post.setAvaliacao(avaliacao);
+
+                if (avaliacao.getAvaliacao() == Avaliacao.ANGRY_FACE){
+                    desc.setText(avaliacao.getDescricao());
+                    imgFeddback.setImageResource(R.drawable.ic_angry_face_color);
+                }
+
+                if (avaliacao.getAvaliacao() == Avaliacao.NEUTRAL_FACE){
+                    desc.setText(avaliacao.getDescricao());
+                    imgFeddback.setImageResource(R.drawable.ic_poker_face_color);
+                }
+
+                if (avaliacao.getAvaliacao() == Avaliacao.HAPPY_FACE){
+                    desc.setText(avaliacao.getDescricao());
+                    imgFeddback.setImageResource(R.drawable.ic_laughing_face_color);
+                }
+
+                if (avaliacao.getAvaliacao() == Avaliacao.FREE){
+                    desc.setText(avaliacao.getDescricao());
+                    imgFeddback.setImageResource(R.drawable.ic_free_color);
+                }
+            }
         } else {
-            post.setLat(-8.409);
-            post.setLng(-34.8713);
         }
 
-        final ImageView imgFeddback = findViewById(R.id.form_feedback);
-        final TextView desc = findViewById(R.id.form_desc);
+        //editText_title = findViewById(R.id.form_title);
+        editText_description = findViewById(R.id.form_description);
 
-        final ImageButton btnPuto = findViewById(R.id.form_btn_angry_face);
-        btnPuto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgFeddback.setImageResource(R.drawable.ic_angry_face_color);
-                desc.setText(R.string.form_evaluation_angry);
-                post.setAvaliacao(Avaliacao.ANGRY_FACE);
-            }
-        });
 
-        ImageButton btnCu = findViewById(R.id.form_btn_poker_face);
-        btnCu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgFeddback.setImageResource(R.drawable.ic_poker_face_color);
-                desc.setText(R.string.form_evaluation_neutral);
-                post.setAvaliacao(Avaliacao.NEUTRAL_FACE);
-            }
-        });
-
-        ImageButton btnFeliz = findViewById(R.id.form_btn_happy_face);
-        btnFeliz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgFeddback.setImageResource(R.drawable.ic_laughing_face_color);
-                desc.setText(R.string.form_evaluation_happy);
-                post.setAvaliacao(Avaliacao.HAPPY_FACE);
-            }
-        });
-
-        ImageButton btnLivre = findViewById(R.id.form_btn_free);
-        btnLivre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgFeddback.setImageResource(R.drawable.ic_free_color);
-                desc.setText(R.string.form_evaluation_free);
-                post.setAvaliacao(Avaliacao.FREE);
-            }
-        });
-
-        editText_title = (EditText) findViewById(R.id.form_title);
-        editText_description = (EditText) findViewById(R.id.form_description);
     }
 
     @Override
@@ -125,12 +116,11 @@ public class FormActivity extends AppCompatActivity {
 
         // data formatada em uma string
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-mm-dd H:mm:ss");
+        SimpleDateFormat dateformat = new SimpleDateFormat(getString(R.string.form_datetime_format));
         String datetime = dateformat.format(c.getTime());
 
         // dados e inserir
-        post.setTitulo(editText_title.getText().toString());
-        post.setDescricao(editText_description.getText().toString());
+        post.setSnippet(editText_description.getText().toString());
         post.setDataString(datetime);
         //post.setUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
