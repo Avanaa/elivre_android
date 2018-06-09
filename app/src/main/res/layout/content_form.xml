@@ -28,7 +28,8 @@
             android:id="@+id/form_description"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:hint="Deixe um feedback sobre o local (opcional)"
+            android:hint="Escreva algo (Opcional)"
+            android:textAlignment="center"
             android:paddingStart="4dp"/>
 
 

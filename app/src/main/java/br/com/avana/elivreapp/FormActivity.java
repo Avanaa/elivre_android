@@ -3,6 +3,7 @@ package br.com.avana.elivreapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class FormActivity extends AppCompatActivity {
 
@@ -45,6 +47,14 @@ public class FormActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.form_toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = findViewById(R.id.form_save);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inserirFirebase();
+            }
+        });
 
         post = new PostModel();
 
@@ -85,30 +95,48 @@ public class FormActivity extends AppCompatActivity {
                     imgFeddback.setImageResource(R.drawable.ic_free_color);
                 }
             }
-        } else {
         }
 
-        //editText_title = findViewById(R.id.form_title);
+        openTapTargetDesciption();
+
         editText_description = findViewById(R.id.form_description);
+    }
 
+    private void openTapTargetDesciption(){
 
+        new MaterialTapTargetPrompt.Builder(this)
+                .setTarget(R.id.form_description)
+                .setPrimaryText("Escreva algo")
+                .setSecondaryText("Você pode escrever algum comentário e ele será exibido na sua ocorrência")
+                .setBackgroundColour(getResources().getColor(R.color.tap_background_5))
+                .setAutoDismiss(true)
+                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                    @Override
+                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+                            openTapTargetSave();
+                        }
+                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED){
+                            openTapTargetSave();
+                        }
+                    }
+                }).show();
+    }
+
+    private void openTapTargetSave(){
+
+        new MaterialTapTargetPrompt.Builder(this)
+                .setTarget(R.id.form_save)
+                .setPrimaryText("Salve sua ocorrência")
+                .setSecondaryText("Clique aqui para publicar a ocorrência, assim outras pessoas poderão vê-la")
+                .setBackgroundColour(getResources().getColor(R.color.tap_background_4))
+                .setAutoDismiss(true)
+                .show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_form, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.action_save:
-                //Salvar no banco e voltar para mapa
-                inserirFirebase();
-                break;
-        }
         return true;
     }
 

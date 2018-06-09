@@ -23,6 +23,7 @@ public class Localizer extends LocationCallback {
     private GoogleMap map;
     private Activity activity;
     private FusedLocationProviderClient providerClient;
+    public Location currentLocation;
 
     public Localizer(Activity activity, GoogleMap map) {
 
@@ -51,7 +52,7 @@ public class Localizer extends LocationCallback {
 
     @Override
     public void onLocationResult(LocationResult locationResult) {
-        Location currentLocation = (Location) locationResult.getLastLocation();
+        currentLocation = (Location) locationResult.getLastLocation();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
     }
 

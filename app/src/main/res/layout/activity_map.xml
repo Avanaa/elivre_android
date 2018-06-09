@@ -9,18 +9,33 @@
 
     <include layout="@layout/fragment_places_auto_complete"/>
 
-    <!--<android.support.design.widget.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:gravity="bottom|end"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/map_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/map_my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            app:srcCompat="@android:drawable/ic_menu_mylocation"
+            android:tint="#FFF"
+            app:backgroundTint="@color/map_fab_mylocation"/>
 
-    </android.support.design.widget.AppBarLayout>-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/map_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            app:srcCompat="@android:drawable/ic_menu_add"
+            android:tint="#FFF"
+            app:backgroundTint="@color/map_fab_add"/>
+
+    </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
