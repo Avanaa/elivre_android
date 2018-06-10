@@ -27,16 +27,14 @@ import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
+import br.com.avana.elivreapp.pref.Preferences;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class FormActivity extends AppCompatActivity {
 
-    private LatLng position;
     private PostModel post;
     private PostDAO postDAO;
     private EditText editText_title, editText_description;
-    private Bundle extras;
-    private Avaliacao avaliacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +59,10 @@ public class FormActivity extends AppCompatActivity {
         final ImageView imgFeddback = findViewById(R.id.form_feedback);
         final TextView desc = findViewById(R.id.form_desc);
 
-        extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
         if (extras != null){
-            position = (LatLng) extras.get("position");
-            avaliacao = (Avaliacao) extras.get("avaliacao");
+            LatLng position = (LatLng) extras.get("position");
+            Avaliacao avaliacao = (Avaliacao) extras.get("avaliacao");
 
             if (position != null){
                 post.setLat(position.latitude);
@@ -97,7 +95,10 @@ public class FormActivity extends AppCompatActivity {
             }
         }
 
-        openTapTargetDesciption();
+        if (Preferences.isTargetFirstTimeSeen(this)){
+            openTapTargetDesciption();
+            Preferences.setTargetFirstTimeSeen(this);
+        }
 
         editText_description = findViewById(R.id.form_description);
     }
@@ -106,8 +107,8 @@ public class FormActivity extends AppCompatActivity {
 
         new MaterialTapTargetPrompt.Builder(this)
                 .setTarget(R.id.form_description)
-                .setPrimaryText("Escreva algo")
-                .setSecondaryText("Você pode escrever algum comentário e ele será exibido na sua ocorrência")
+                .setPrimaryText(R.string.tap_description_title)
+                .setSecondaryText(R.string.tap_description_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_5))
                 .setAutoDismiss(true)
                 .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
@@ -127,8 +128,8 @@ public class FormActivity extends AppCompatActivity {
 
         new MaterialTapTargetPrompt.Builder(this)
                 .setTarget(R.id.form_save)
-                .setPrimaryText("Salve sua ocorrência")
-                .setSecondaryText("Clique aqui para publicar a ocorrência, assim outras pessoas poderão vê-la")
+                .setPrimaryText(R.string.tap_save_title)
+                .setSecondaryText(R.string.tap_save_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_4))
                 .setAutoDismiss(true)
                 .show();
@@ -158,9 +159,9 @@ public class FormActivity extends AppCompatActivity {
 
     private void inserirFirebaseSucesso(){
         AlertDialog.Builder alert = new AlertDialog.Builder(FormActivity.this);
-        alert.setTitle("Enviado!");
-        alert.setMessage("Ocorrência enviada com sucesso.");
-        alert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+        alert.setTitle(R.string.form_send_title);
+        alert.setMessage(R.string.form_send_subtitle);
+        alert.setPositiveButton(R.string.form_ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 finish();
             }

@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,9 +35,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.List;
+import java.util.Objects;
 
 import br.com.avana.elivreapp.FormActivity;
 import br.com.avana.elivreapp.R;
@@ -52,7 +51,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, ChildEventListener {
 
     public final static int MY_LOCATION_ENABLE = 1;
 
@@ -62,7 +61,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private DatabaseReference mRef;
     private PlaceAutocompleteFragment autoCompleteFragment;
-    //private ClusterManager<PostModel> clusterManager;
 
     private LatLng position;
     private EvaluationAdapter adapter;
@@ -74,118 +72,33 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getMapAsync(this);
-        mRef = FirebaseDatabase.getInstance().getReference("Posts");
+        mRef = FirebaseDatabase.getInstance().getReference(getString(R.string.posts));
     }
 
     @Override
     public void onMapReady(final GoogleMap map) {
 
-        this.googleMap = map;
+        googleMap = map;
 
-        //clusterManager = new ClusterManager<PostModel>(getActivity(), this.googleMap);
-        //this.googleMap.setOnCameraIdleListener(clusterManager);
-        //this.googleMap.setOnMarkerClickListener(clusterManager);
-
-        // Set MyLocationButton true and open Localizer
-        if (ActivityCompat.checkSelfPermission(
-                getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, MY_LOCATION_ENABLE);
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION}
+                    , MY_LOCATION_ENABLE);
         } else {
-            localizer = new Localizer(getActivity(), googleMap);
-            this.googleMap.setMyLocationEnabled(true);
-
-            if (this.getView() != null && this.getView().findViewById(Integer.parseInt("1")) != null){
-                locationButton = ((View) this.getView().findViewById(Integer.parseInt("1"))
-                        .getParent()).findViewById(Integer.parseInt("2"));
-
-                if (locationButton != null){
-                    locationButton.setVisibility(View.GONE);
-                }
-            }
-
-            FloatingActionButton myLocationAdd = getActivity().findViewById(R.id.map_my_location);
-            myLocationAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (locationButton != null){
-                        locationButton.callOnClick();
-                    }
-                }
-            });
-
-            FloatingActionButton fabAdd = getActivity().findViewById(R.id.map_add);
-            fabAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openDialog();
-                }
-            });
+            openLocalizer();
+            googleMap.setMyLocationEnabled(true);
         }
-
-        // Click MyLocation button
-        this.googleMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
-            @Override
-            public void onMyLocationClick(@NonNull Location location) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(location.getLatitude(), location.getLongitude()), 15));
-            }
-        });
 
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        mRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                PostModel post = dataSnapshot.getValue(PostModel.class);
-                MarkerOptions options = new MarkerOptions();
-
-                options.position(post.getPosition());
-                options.title(post.getTitle());
-                options.snippet(post.getSnippet());
-
-                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_free);
-
-                if (post.getAvaliacao().getAvaliacao() == Avaliacao.ANGRY_FACE){
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_angry);
-                }
-
-                if (post.getAvaliacao().getAvaliacao() == Avaliacao.NEUTRAL_FACE){
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_neutral);
-                }
-
-                if (post.getAvaliacao().getAvaliacao() == Avaliacao.HAPPY_FACE){
-                    bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_happy);
-                }
-
-                options.icon(bitmapDescriptor);
-
-                googleMap.addMarker(options);
-
-                //clusterManager.addItem(data.getValue(PostModel.class));
-                //clusterManager.cluster();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
+        mRef.addChildEventListener(this);
 
         autoCompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
         autoCompleteFragment.setFilter(new AutocompleteFilter.Builder()
                 .setCountry("BR")
                 .build());
@@ -197,43 +110,98 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             }
 
             @Override
-            public void onError(Status status) {}
+            public void onError(Status status) {
+            }
         });
 
-        if (Preferences.isTargetFirstTimeSeen(getActivity())){
+        if (this.getView() != null && this.getView().findViewById(Integer.parseInt("1")) != null) {
+            locationButton = ((View) this.getView().findViewById(Integer.parseInt("1"))
+                    .getParent()).findViewById(Integer.parseInt("2"));
+
+            if (locationButton != null) {
+                locationButton.setVisibility(View.GONE);
+            }
+        }
+
+        FloatingActionButton myLocationAdd = getActivity().findViewById(R.id.map_my_location);
+        myLocationAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (locationButton != null) {
+                    locationButton.callOnClick();
+                }
+            }
+        });
+
+        FloatingActionButton fabAdd = getActivity().findViewById(R.id.map_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
+
+        if (Preferences.isTargetFirstTimeSeen(getActivity())) {
             openTapTargetSearch();
             Preferences.setTargetFirstTimeSeen(getActivity());
         }
     }
 
-    private void openTapTargetSearch(){
+    private MarkerOptions getMarkerOptionsByPost(PostModel post) {
 
-        ImageView searchIcon = (ImageView)((LinearLayout)autoCompleteFragment.getView()).getChildAt(0);
+        MarkerOptions options = new MarkerOptions();
+
+        options.position(post.getPosition());
+        options.title(post.getTitle());
+        options.snippet(post.getSnippet());
+
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_free);
+
+        if (post.getAvaliacao().getAvaliacao() == Avaliacao.ANGRY_FACE) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_angry);
+        }
+
+        if (post.getAvaliacao().getAvaliacao() == Avaliacao.NEUTRAL_FACE) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_neutral);
+        }
+
+        if (post.getAvaliacao().getAvaliacao() == Avaliacao.HAPPY_FACE) {
+            bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.marker_happy);
+        }
+
+        options.icon(bitmapDescriptor);
+
+        return options;
+    }
+
+    private void openTapTargetSearch() {
+
+        ImageView searchIcon = (ImageView) ((LinearLayout) autoCompleteFragment.getView()).getChildAt(0);
         new MaterialTapTargetPrompt.Builder(getActivity())
                 .setTarget(searchIcon.getId())
-                .setPrimaryText("Procurar por endereço")
-                .setSecondaryText("Faça uma busca pelo endereço para visualizar as ocorrências do local")
+                .setPrimaryText(R.string.tap_search_title)
+                .setSecondaryText(R.string.tap_search_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_1))
                 .setAutoDismiss(true)
                 .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
                     @Override
                     public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
                             openTapTargetLocal();
                         }
-                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED){
+                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
                             openTapTargetLocal();
                         }
                     }
                 }).show();
     }
 
-    private void openTapTargetLocal(){
+    private void openTapTargetLocal() {
 
         new MaterialTapTargetPrompt.Builder(getActivity())
                 .setTarget(R.id.map_my_location)
-                .setPrimaryText("Seu Local")
-                .setSecondaryText("Clique aqui e será direcionado para seu local atual")
+                .setPrimaryText(R.string.tap_local_title)
+                .setSecondaryText(R.string.tap_local_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_2))
                 .setAutoDismiss(true)
                 .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
@@ -249,31 +217,27 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 }).show();
     }
 
-    private void openTapTargetNew(){
+    private void openTapTargetNew() {
 
         new MaterialTapTargetPrompt.Builder(getActivity())
                 .setTarget(R.id.map_add)
-                .setPrimaryText("Criar ocorrência")
-                .setSecondaryText("Clique aqui para criar uma nova ocorrência")
+                .setPrimaryText(R.string.tap_new_title)
+                .setSecondaryText(R.string.tap_new_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_3))
                 .setAutoDismiss(true)
                 .show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void requestPermissions(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
 
             case MY_LOCATION_ENABLE:
+                if ((ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    && (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
 
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                } else {
-                    localizer = new Localizer(getActivity(), googleMap);
                     this.googleMap.setMyLocationEnabled(true);
                 }
                 break;
@@ -308,7 +272,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         AlertDialog.Builder options = new AlertDialog.Builder(getActivity());
 
         TextView title = new TextView(getActivity());
-        title.setText("Como foi o atendimento?");
+        title.setText(getString(R.string.dialog_evaluation_title));
         title.setGravity(Gravity.CENTER);
         title.setTextSize(20);
         title.setPadding(10, 10, 10, 10);
@@ -331,5 +295,28 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             }
         });
         options.create().show();
+    }
+
+    @Override
+    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+        PostModel post = dataSnapshot.getValue(PostModel.class);
+        MarkerOptions options = getMarkerOptionsByPost(post);
+        googleMap.addMarker(options);
+    }
+
+    @Override
+    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+    @Override
+    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {}
+
+    public void openLocalizer() {
+        localizer = new Localizer(getActivity(), googleMap);
     }
 }

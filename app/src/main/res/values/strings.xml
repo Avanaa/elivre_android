@@ -84,4 +84,23 @@
     <string name="title_activity_login">Login</string>
     <string name="form_datetime_format">yyyy-mm-dd H:mm:ss</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="tap_search_title">Procurar por endereço</string>
+    <string name="tap_search_subtitle">Faça uma busca pelo endereço para visualizar as ocorrências do local.</string>
+    <string name="tap_local_title">Seu Local</string>
+    <string name="tap_local_subtitle">Clique aqui e será direcionado para seu local atual.</string>
+    <string name="tap_new_title">Criar ocorrência</string>
+    <string name="tap_new_subtitle">Clique aqui para criar uma nova ocorrência.</string>
+    <string name="dialog_evaluation_title">Como foi o atendimento?</string>
+    <string name="posts">Posts</string>
+    <string name="preference_map_viewed">br.com.avana.elivreapp.MAP_VIEWED</string>
+    <string name="tap_description_title">Escreva algo</string>
+    <string name="tap_description_subtitle">Você pode escrever algum comentário e ele será exibido na sua ocorrência</string>
+    <string name="tap_save_title">Salve sua ocorrência</string>
+    <string name="tap_save_subtitle">Clique aqui para publicar a ocorrência, assim outras pessoas poderão vê-la</string>
+    <string name="form_enviado">Enviado!</string>
+    <string name="form_send_title">"Enviado"</string>
+    <string name="form_send_subtitle">Ocorrência enviada com sucesso.</string>
+    <string name="form_ok">OK</string>
+    <string name="localizer">localizer</string>
+
 </resources>
