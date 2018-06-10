@@ -228,22 +228,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 .show();
     }
 
-    public void requestPermissions(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-
-            case MY_LOCATION_ENABLE:
-                if ((ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    && (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
-
-                    this.googleMap.setMyLocationEnabled(true);
-                }
-                break;
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -317,6 +301,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onCancelled(@NonNull DatabaseError databaseError) {}
 
     public void openLocalizer() {
-        localizer = new Localizer(getActivity(), googleMap);
+        localizer = new Localizer(getActivity(), googleMap, getView());
     }
 }

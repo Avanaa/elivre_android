@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -23,14 +24,16 @@ import static br.com.avana.elivreapp.fragment.MapFragment.MY_LOCATION_ENABLE;
 public class Localizer extends LocationCallback implements Serializable {
 
     private GoogleMap map;
+    private View view;
     private Activity activity;
     private FusedLocationProviderClient providerClient;
     public Location currentLocation;
 
-    public Localizer(Activity activity, GoogleMap map) {
+    public Localizer(Activity activity, GoogleMap map, View view) {
 
         this.activity = activity;
         this.map = map;
+        this.view = view;
 
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setSmallestDisplacement(50);
@@ -55,6 +58,16 @@ public class Localizer extends LocationCallback implements Serializable {
         currentLocation = (Location) locationResult.getLastLocation();
         if (map != null){
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+
+            if (view != null && view.findViewById(Integer.parseInt("1")) != null) {
+                View locationButton = ((View) view.findViewById(Integer.parseInt("1"))
+                        .getParent()).findViewById(Integer.parseInt("2"));
+
+                if (locationButton != null) {
+                    locationButton.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 
