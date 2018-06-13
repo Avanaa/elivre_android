@@ -88,11 +88,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         updateUi(auth.getCurrentUser());
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
