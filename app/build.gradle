@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-repositories{
+repositories {
     google()
     maven { url 'https://maven.fabric.io/public' }
     mavenCentral()
@@ -52,6 +52,7 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.firebase:firebase-crash:16.0.0'
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:2.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

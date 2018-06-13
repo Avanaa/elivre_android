@@ -3,17 +3,11 @@
     <string name="facebook_app_id">431921443886958</string>
     <string name="fb_login_protocol_scheme">fb431921443886958</string>
 
-
-
     <string name="app_name">Elivre</string>
-    <string name="app_form">Formulário</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_map">Map</string>
+    <string name="app_form">Nova Ocorrência</string>
+    <string name="action_settings">Configurações</string>
+    <string name="title_activity_map">Mapa</string>
     <string name="app_map">Mapa</string>
-    <string name="form_evaluation_angry">Fui estuprado pelos flanelinhas</string>
-    <string name="form_evaluation_neutral">Flanelinhas nem fedem nem cheiram</string>
-    <string name="form_evaluation_happy">Flanelinhas gostosos</string>
-    <string name="form_evaluation_free">Livre pra caralho</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -89,4 +83,24 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_login">Login</string>
     <string name="form_datetime_format">yyyy-mm-dd H:mm:ss</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tap_search_title">Procurar por endereço</string>
+    <string name="tap_search_subtitle">Faça uma busca pelo endereço para visualizar as ocorrências do local.</string>
+    <string name="tap_local_title">Seu Local</string>
+    <string name="tap_local_subtitle">Clique aqui e será direcionado para seu local atual.</string>
+    <string name="tap_new_title">Criar ocorrência</string>
+    <string name="tap_new_subtitle">Clique aqui para criar uma nova ocorrência.</string>
+    <string name="dialog_evaluation_title">Como foi o atendimento?</string>
+    <string name="posts">Posts</string>
+    <string name="preference_map_viewed">br.com.avana.elivreapp.MAP_VIEWED</string>
+    <string name="tap_description_title">Escreva algo</string>
+    <string name="tap_description_subtitle">Você pode escrever algum comentário e ele será exibido na sua ocorrência</string>
+    <string name="tap_save_title">Salve sua ocorrência</string>
+    <string name="tap_save_subtitle">Clique aqui para publicar a ocorrência, assim outras pessoas poderão vê-la</string>
+    <string name="form_enviado">Enviado!</string>
+    <string name="form_send_title">"Enviado"</string>
+    <string name="form_send_subtitle">Ocorrência enviada com sucesso.</string>
+    <string name="form_ok">OK</string>
+    <string name="localizer">localizer</string>
+
 </resources>

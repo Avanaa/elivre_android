@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
         finish();
     }
 
-    private void ex(){
+    /*private void ex(){
         throw new RuntimeException("Falha");
-    }
+    }*/
 }

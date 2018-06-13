@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f57c00</color>
-    <color name="colorPrimaryDark">#e65100</color>
-    <color name="colorAccent">#ff6f00</color>
+    <color name="colorPrimary">#00897b</color>
+    <color name="colorPrimaryDark">#004d40</color>
+    <color name="colorAccent">#4db6ac</color>
+    <color name="map_fab_mylocation">#ff4081</color>
+    <color name="map_fab_add">#4db6ac</color>
+    <color name="form_fab_save">#d81b60</color>
+    <color name="tap_background_1">#7b1fa2</color>
+    <color name="tap_background_2">#c2185b</color>
+    <color name="tap_background_3">#00695c</color>
+    <color name="tap_background_4">#ad1457</color>
+    <color name="tap_background_5">#00838f</color>
+    <color name="place_autocomplete_search_text">#666</color>
+    <color name="place_autocomplete_search_hint">#666</color>
 </resources>
