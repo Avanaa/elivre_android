@@ -11,6 +11,7 @@
     <color name="tap_background_3">#00695c</color>
     <color name="tap_background_4">#ad1457</color>
     <color name="tap_background_5">#00838f</color>
-    <color name="place_autocomplete_search_text">#666</color>
-    <color name="place_autocomplete_search_hint">#666</color>
+    <color name="place_autocomplete_search_text">#FFF</color>
+    <color name="place_autocomplete_search_hint">#FFF</color>
+    <color name="place_autocomplete_search_button">#FFF</color>
 </resources>

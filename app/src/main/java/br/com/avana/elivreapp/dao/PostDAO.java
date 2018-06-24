@@ -1,16 +1,19 @@
 package br.com.avana.elivreapp.dao;
 
+import android.content.Context;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import br.com.avana.elivreapp.R;
 import br.com.avana.elivreapp.model.PostModel;
 
 public class PostDAO {
 
     private final DatabaseReference myRef;
 
-    public PostDAO(){
-        myRef = FirebaseDatabase.getInstance().getReference("Posts");
+    public PostDAO(Context context){
+        myRef = FirebaseDatabase.getInstance().getReference(context.getString(R.string.database_posts_name));
     }
 
     public void save(PostModel post){

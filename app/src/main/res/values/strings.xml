@@ -3,104 +3,78 @@
     <string name="facebook_app_id">431921443886958</string>
     <string name="fb_login_protocol_scheme">fb431921443886958</string>
 
-    <string name="app_name">Elivre</string>
-    <string name="app_form">Nova Ocorrência</string>
-    <string name="action_settings">Configurações</string>
-    <string name="title_activity_map">Mapa</string>
-    <string name="app_map">Mapa</string>
-    <string name="title_activity_settings">Settings</string>
+    <!-- Database -->
+    <string name="database_posts_name">Posts</string>
+    <string name="database_posts_data_string">dataString</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
+    <!-- Preferences -->
     <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
+    <string name="pref_title_map_theme_dark">Ativar modo noturno do mapa</string>
+    <string name="pref_description_map_theme_dark">Define tema com tons escuros no mapa</string>
+    <string name="pref_title_time_ocurrence">Limite de tempo das últimas ocorrências</string>
+    <string name="pref_description_time_ocurrence">Defina o intervalo limite em horas em que as ocorrências aparecerão</string>
+    <string-array name="pref_time_list">
+        <item>6 Horas</item>
+        <item>12 Horas</item>
+        <item>24 Horas</item>
     </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
+    <string-array name="pref_time_list_values">
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
     </string-array>
 
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="preference_is_first_time_seen">br.com.avana.elivreapp.FIRST_TIME_SEEN</string>
+    <string name="preference_map_theme_dark">br.com.avana.elivreapp.MAP_THEME_DARK</string>
+    <string name="preference_time_limit_ocurrences">br.com.avana.elivreapp.TIME_LIMIT_OCURRENCES</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_login">Login</string>
-    <string name="form_datetime_format">yyyy-mm-dd H:mm:ss</string>
-    <string name="title_activity_main">MainActivity</string>
+    <!-- Quickstart -->
     <string name="tap_search_title">Procurar por endereço</string>
     <string name="tap_search_subtitle">Faça uma busca pelo endereço para visualizar as ocorrências do local.</string>
     <string name="tap_local_title">Seu Local</string>
     <string name="tap_local_subtitle">Clique aqui e será direcionado para seu local atual.</string>
     <string name="tap_new_title">Criar ocorrência</string>
     <string name="tap_new_subtitle">Clique aqui para criar uma nova ocorrência.</string>
-    <string name="dialog_evaluation_title">Como foi o atendimento?</string>
-    <string name="posts">Posts</string>
-    <string name="preference_map_viewed">br.com.avana.elivreapp.MAP_VIEWED</string>
     <string name="tap_description_title">Escreva algo</string>
     <string name="tap_description_subtitle">Você pode escrever algum comentário e ele será exibido na sua ocorrência</string>
     <string name="tap_save_title">Salve sua ocorrência</string>
     <string name="tap_save_subtitle">Clique aqui para publicar a ocorrência, assim outras pessoas poderão vê-la</string>
+
+    <!-- App -->
+    <string name="app_name">Elivre</string>
+
+    <!-- Login -->
+    <string name="title_activity_login">Login</string>
+
+    <!-- Map -->
+    <string name="title_activity_map">Mapa</string>
+
+    <!-- Localizer -->
+    <string name="localizer">localizer</string>
+
+    <!-- Form -->
+    <string name="title_activity_form">Nova Ocorrência</string>
+    <string name="form_datetime_format">yyyy-MM-dd H:mm:ss</string>
     <string name="form_enviado">Enviado!</string>
     <string name="form_send_title">"Enviado"</string>
     <string name="form_send_subtitle">Ocorrência enviada com sucesso.</string>
     <string name="form_ok">OK</string>
-    <string name="localizer">localizer</string>
+
+    <!-- Settings -->
+    <string name="title_activity_settings">Configurações</string>
+
+    <!-- Popups -->
+
+    <!-- Evaluation -->
+    <string name="dialog_evaluation_title">Como foi sua experiência?</string>
+    <string name="evaluation_angry">Desagradável</string>
+    <string name="evaluation_neutral">Razoável</string>
+    <string name="evaluation_happy">Tranquila</string>
+    <string name="evaluation_free">Ausência de flanelinhas</string>
+
+    <!-- Menu Actions -->
+    <string name="action_settings">Configurações</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_save">Salvar</string>
 
 </resources>

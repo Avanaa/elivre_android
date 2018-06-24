@@ -1,7 +1,6 @@
 package br.com.avana.elivreapp.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,15 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,12 +21,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,22 +40,20 @@ import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 import br.com.avana.elivreapp.pref.Preferences;
+import br.com.avana.elivreapp.util.DateConvert;
 import br.com.avana.elivreapp.util.Evaluations;
 import br.com.avana.elivreapp.util.Localizer;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, ChildEventListener {
 
     public final static int MY_LOCATION_ENABLE = 1;
 
     public final static int GO_FORM = 3;
-    public final static int GO_LIST = 4;
+    private static final int ZOOM_MAP = 20;
 
     private GoogleMap googleMap;
     private DatabaseReference mRef;
-    private PlaceAutocompleteFragment autoCompleteFragment;
 
     private LatLng position;
     private EvaluationAdapter adapter;
@@ -72,13 +65,18 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         getMapAsync(this);
-        mRef = FirebaseDatabase.getInstance().getReference(getString(R.string.posts));
     }
 
     @Override
     public void onMapReady(final GoogleMap map) {
 
         googleMap = map;
+
+        if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))){
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
+        } else {
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_default));
+        }
 
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -96,24 +94,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        mRef.addChildEventListener(this);
-
-        autoCompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autoCompleteFragment.setFilter(new AutocompleteFilter.Builder()
-                .setCountry("BR")
-                .build());
-
-        autoCompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 18));
-            }
-
-            @Override
-            public void onError(Status status) {
-            }
-        });
-
         if (this.getView() != null && this.getView().findViewById(Integer.parseInt("1")) != null) {
             locationButton = ((View) this.getView().findViewById(Integer.parseInt("1"))
                     .getParent()).findViewById(Integer.parseInt("2"));
@@ -123,8 +103,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             }
         }
 
-        FloatingActionButton myLocationAdd = getActivity().findViewById(R.id.map_my_location);
-        myLocationAdd.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabMyLocation = getActivity().findViewById(R.id.map_my_location);
+        fabMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (locationButton != null) {
@@ -137,6 +117,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (locationButton != null){
+                    locationButton.callOnClick();
+                }
                 openDialog();
             }
         });
@@ -145,6 +128,37 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             openTapTargetSearch();
             Preferences.setTargetFirstTimeSeen(getActivity());
         }
+
+        String dateLimit = DateConvert.addHourInterval(getActivity(), null,
+                Preferences.getTimeOcurrenceInterval(Objects.requireNonNull(getActivity())));
+
+        mRef = FirebaseDatabase.getInstance()
+                .getReference(getString(R.string.database_posts_name))
+                .orderByChild(getString(R.string.database_posts_data_string))
+                .startAt(dateLimit)
+                .getRef();
+
+        mRef.addChildEventListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))) {
+            if (googleMap != null){
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
+            }
+        } else {
+            if (googleMap != null){
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_default));
+            }
+        }
+    }
+
+    public void moveMapCamera(LatLng latLng){
+        if (latLng == null){ return; }
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_MAP));
     }
 
     private MarkerOptions getMarkerOptionsByPost(PostModel post) {
@@ -176,9 +190,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private void openTapTargetSearch() {
 
-        ImageView searchIcon = (ImageView) ((LinearLayout) autoCompleteFragment.getView()).getChildAt(0);
+        //ImageView searchIcon = (ImageView) ((LinearLayout) autoCompleteFragment.getView()).getChildAt(0);
+
         new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(searchIcon.getId())
+                //.setTarget(searchIcon.getId())
+                .setTarget(R.id.action_search)
                 .setPrimaryText(R.string.tap_search_title)
                 .setSecondaryText(R.string.tap_search_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_1))
@@ -228,29 +244,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 .show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (resultCode == Activity.RESULT_OK){
-            switch (requestCode){
-                case GO_FORM:
-                    //Insert new post on map
-                    break;
-
-                case GO_LIST:
-                    // Do Nothing
-                    break;
-            }
-        }
-
-        if (resultCode == Activity.RESULT_CANCELED){
-            //Do nothing
-        }
-    }
-
     public void openDialog(){
 
-        List<Avaliacao> avaliacoes = Evaluations.getEvaluationlist();
+        List<Avaliacao> avaliacoes = Evaluations.getEvaluationlist(Objects.requireNonNull(getActivity()));
         adapter = new EvaluationAdapter(avaliacoes, getActivity());
 
         AlertDialog.Builder options = new AlertDialog.Builder(getActivity());
@@ -303,4 +299,5 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void openLocalizer() {
         localizer = new Localizer(getActivity(), googleMap, getView());
     }
+
 }

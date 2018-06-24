@@ -23,14 +23,4 @@
 
     <include layout="@layout/content_form" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/form_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="8dp"
-        app:srcCompat="@android:drawable/ic_menu_save"
-        android:tint="#FFF"
-        app:backgroundTint="@color/form_fab_save"/>
-
 </android.support.design.widget.CoordinatorLayout>

@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 
 import br.com.avana.elivreapp.R;
 
-public class SettingsFragment extends PreferenceFragment {
-    public SettingsFragment() {
+public class TimeSettingsFragment extends PreferenceFragment {
+    public TimeSettingsFragment() {
         // Required empty public constructor
     }
 
@@ -15,6 +15,5 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_time);
-        //addPreferencesFromResource(R.xml.pref_map);
     }
 }

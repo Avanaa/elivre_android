@@ -35,6 +35,7 @@ public class SplashActivity extends Activity {
         //Intent intent = new Intent(getApplicationContext(), FormActivity.class);
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        //Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
         finish();
     }

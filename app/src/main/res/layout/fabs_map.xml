@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<temp_root xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom|end"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_map">
 
-</temp_root>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_my_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="8dp"
+        app:srcCompat="@android:drawable/ic_menu_mylocation"
+        android:tint="#FFF"
+        app:backgroundTint="@color/map_fab_mylocation" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="8dp"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:tint="#FFF"
+        app:backgroundTint="@color/map_fab_add" />
+
+</LinearLayout>

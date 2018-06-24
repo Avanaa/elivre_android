@@ -1,33 +1,25 @@
 package br.com.avana.elivreapp;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 import br.com.avana.elivreapp.pref.Preferences;
+import br.com.avana.elivreapp.util.DateConvert;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class FormActivity extends AppCompatActivity {
@@ -45,14 +37,6 @@ public class FormActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.form_toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.form_save);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inserirFirebase();
-            }
-        });
 
         post = new PostModel();
 
@@ -127,7 +111,7 @@ public class FormActivity extends AppCompatActivity {
     private void openTapTargetSave(){
 
         new MaterialTapTargetPrompt.Builder(this)
-                .setTarget(R.id.form_save)
+                .setTarget(R.id.action_save)
                 .setPrimaryText(R.string.tap_save_title)
                 .setSecondaryText(R.string.tap_save_subtitle)
                 .setBackgroundColour(getResources().getColor(R.color.tap_background_4))
@@ -141,19 +125,25 @@ public class FormActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save){
+            inserirFirebase();
+        }
+        return true;
+    }
+
     private void inserirFirebase(){
 
         // data formatada em uma string
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateformat = new SimpleDateFormat(getString(R.string.form_datetime_format));
-        String datetime = dateformat.format(c.getTime());
+        String datetime = DateConvert.getDateFormatByCalendar(this, Calendar.getInstance());
 
         // dados e inserir
         post.setSnippet(editText_description.getText().toString());
         post.setDataString(datetime);
         //post.setUsuario(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        new PostDAO().save(post);
+        new PostDAO(this).save(post);
         inserirFirebaseSucesso();
     }
 

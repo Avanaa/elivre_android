@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="24"
+        android:key="@string/preference_time_limit_ocurrences"
+        android:title="@string/pref_title_time_ocurrence"
+        android:summary="@string/pref_description_time_ocurrence"
+        android:entries="@array/pref_time_list"
+        android:entryValues="@array/pref_time_list_values" />
 
 </PreferenceScreen>

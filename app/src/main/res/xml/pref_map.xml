@@ -7,10 +7,4 @@
         android:summary="@string/pref_description_map_theme_dark"
         android:title="@string/pref_title_map_theme_dark" />
 
-    <ListPreference
-        android:defaultValue="24"
-        android:key="@string/preference_time_limit_ocurrences"
-        android:title="@string/pref_title_time_ocurrence"
-        android:entries="@array/pref_time_list"
-        android:entryValues="@array/pref_time_list_values" />
 </PreferenceScreen>

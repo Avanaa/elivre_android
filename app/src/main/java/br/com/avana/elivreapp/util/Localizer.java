@@ -67,7 +67,6 @@ public class Localizer extends LocationCallback implements Serializable {
                     locationButton.setVisibility(View.GONE);
                 }
             }
-
         }
     }
 
