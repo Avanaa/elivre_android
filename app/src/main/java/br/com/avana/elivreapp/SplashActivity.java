@@ -31,16 +31,10 @@ public class SplashActivity extends Activity {
     }
 
     private void goMap(){
-
-        //Intent intent = new Intent(getApplicationContext(), FormActivity.class);
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        //Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
         finish();
     }
 
-    /*private void ex(){
-        throw new RuntimeException("Falha");
-    }*/
 }
