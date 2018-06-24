@@ -1,0 +1,17 @@
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="br.com.avana.elivreapp.ListActivity">
+
+    <item
+        android:title="@string/action_settings"
+        android:id="@+id/action_settings" />
+
+    <item
+        android:title="Search"
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        />
+
+</menu>
