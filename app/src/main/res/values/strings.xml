@@ -24,7 +24,8 @@
         <item>24</item>
     </string-array>
 
-    <string name="preference_is_first_time_seen">br.com.avana.elivreapp.FIRST_TIME_SEEN</string>
+    <string name="preference_is_map_screen_viewed">br.com.avana.elivreapp.MAP_SCREEN_VIEWED</string>
+    <string name="preference_is_form_screen_viewed">br.com.avana.elivreapp.FORM_SCREEN_VIEWED</string>
     <string name="preference_map_theme_dark">br.com.avana.elivreapp.MAP_THEME_DARK</string>
     <string name="preference_time_limit_ocurrences">br.com.avana.elivreapp.TIME_LIMIT_OCURRENCES</string>
 

@@ -19,8 +19,8 @@ import br.com.avana.elivreapp.dao.PostDAO;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 import br.com.avana.elivreapp.pref.Preferences;
+import br.com.avana.elivreapp.quickstart.TapTarget;
 import br.com.avana.elivreapp.util.DateConvert;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class FormActivity extends AppCompatActivity {
 
@@ -78,45 +78,31 @@ public class FormActivity extends AppCompatActivity {
                 }
             }
         }
-
-        if (Preferences.isTargetFirstTimeSeen(this)){
-            openTapTargetDesciption();
-            Preferences.setTargetFirstTimeSeen(this);
-        }
-
         editText_description = findViewById(R.id.form_description);
+
+        if (Preferences.isFirstTimeSeenFormScreen(this)){
+            openTapTargets();
+            Preferences.setFormScreenViewed(this);
+        }
     }
 
-    private void openTapTargetDesciption(){
+    private void openTapTargets() {
 
-        new MaterialTapTargetPrompt.Builder(this)
-                .setTarget(R.id.form_description)
-                .setPrimaryText(R.string.tap_description_title)
-                .setSecondaryText(R.string.tap_description_subtitle)
-                .setBackgroundColour(getResources().getColor(R.color.tap_background_5))
-                .setAutoDismiss(true)
-                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                    @Override
-                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED){
-                            openTapTargetSave();
-                        }
-                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED){
-                            openTapTargetSave();
-                        }
-                    }
-                }).show();
-    }
+        TapTarget targetSave = new TapTarget(this,
+                R.id.action_save,
+                R.string.tap_save_title,
+                R.string.tap_save_subtitle,
+                R.color.tap_background_4,
+                null);
 
-    private void openTapTargetSave(){
+        TapTarget targetDescription = new TapTarget(this,
+                R.id.form_description,
+                R.string.tap_description_title,
+                R.string.tap_description_subtitle,
+                R.color.tap_background_5,
+                targetSave);
 
-        new MaterialTapTargetPrompt.Builder(this)
-                .setTarget(R.id.action_save)
-                .setPrimaryText(R.string.tap_save_title)
-                .setSecondaryText(R.string.tap_save_subtitle)
-                .setBackgroundColour(getResources().getColor(R.color.tap_background_4))
-                .setAutoDismiss(true)
-                .show();
+        targetDescription.getBuilder().show();
     }
 
     @Override

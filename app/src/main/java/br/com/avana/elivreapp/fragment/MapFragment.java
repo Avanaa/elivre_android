@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -28,8 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,10 +39,10 @@ import br.com.avana.elivreapp.adapter.EvaluationAdapter;
 import br.com.avana.elivreapp.model.Avaliacao;
 import br.com.avana.elivreapp.model.PostModel;
 import br.com.avana.elivreapp.pref.Preferences;
+import br.com.avana.elivreapp.quickstart.TapTarget;
 import br.com.avana.elivreapp.util.DateConvert;
 import br.com.avana.elivreapp.util.Evaluations;
 import br.com.avana.elivreapp.util.Localizer;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, ChildEventListener {
 
@@ -72,11 +71,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
         googleMap = map;
 
-        if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))){
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
-        } else {
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_default));
-        }
+        defineThemeMap();
 
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -90,6 +85,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         } else {
             openLocalizer();
             googleMap.setMyLocationEnabled(true);
+            checkIsFirstTimeSeen();
         }
 
         googleMap.getUiSettings().setMapToolbarEnabled(false);
@@ -123,36 +119,22 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 openDialog();
             }
         });
+    }
 
-        if (Preferences.isTargetFirstTimeSeen(getActivity())) {
-            openTapTargetSearch();
-            Preferences.setTargetFirstTimeSeen(getActivity());
+    public void checkIsFirstTimeSeen() {
+        if (Preferences.isFirstTimeSeenMapScreen(getActivity())) {
+            openTapTargets();
+            Preferences.setMapScreenViewed(getActivity());
         }
-
-        String dateLimit = DateConvert.addHourInterval(getActivity(), null,
-                Preferences.getTimeOcurrenceInterval(Objects.requireNonNull(getActivity())));
-
-        mRef = FirebaseDatabase.getInstance()
-                .getReference(getString(R.string.database_posts_name))
-                .orderByChild(getString(R.string.database_posts_data_string))
-                .startAt(dateLimit)
-                .getRef();
-
-        mRef.addChildEventListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))) {
-            if (googleMap != null){
-                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
-            }
-        } else {
-            if (googleMap != null){
-                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_default));
-            }
+        if (googleMap != null){
+            initializeFirebaseDatabase();
+            defineThemeMap();
         }
     }
 
@@ -188,60 +170,30 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         return options;
     }
 
-    private void openTapTargetSearch() {
+    private void openTapTargets(){
 
-        //ImageView searchIcon = (ImageView) ((LinearLayout) autoCompleteFragment.getView()).getChildAt(0);
+        TapTarget targetNew = new TapTarget((AppCompatActivity) getActivity(),
+                R.id.map_add,
+                R.string.tap_new_title,
+                R.string.tap_new_subtitle,
+                R.color.tap_background_3,
+                null);
 
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                //.setTarget(searchIcon.getId())
-                .setTarget(R.id.action_search)
-                .setPrimaryText(R.string.tap_search_title)
-                .setSecondaryText(R.string.tap_search_subtitle)
-                .setBackgroundColour(getResources().getColor(R.color.tap_background_1))
-                .setAutoDismiss(true)
-                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                    @Override
-                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                            openTapTargetLocal();
-                        }
-                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
-                            openTapTargetLocal();
-                        }
-                    }
-                }).show();
-    }
+        TapTarget targetLocal = new TapTarget((AppCompatActivity) getActivity(),
+                R.id.map_my_location,
+                R.string.tap_local_title,
+                R.string.tap_local_subtitle,
+                R.color.tap_background_2,
+                targetNew);
 
-    private void openTapTargetLocal() {
+        TapTarget targetSearch = new TapTarget((AppCompatActivity) getActivity(),
+                R.id.action_search,
+                R.string.tap_search_title,
+                R.string.tap_search_subtitle,
+                R.color.tap_background_1,
+                targetLocal);
 
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(R.id.map_my_location)
-                .setPrimaryText(R.string.tap_local_title)
-                .setSecondaryText(R.string.tap_local_subtitle)
-                .setBackgroundColour(getResources().getColor(R.color.tap_background_2))
-                .setAutoDismiss(true)
-                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                    @Override
-                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                            openTapTargetNew();
-                        }
-                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
-                            openTapTargetNew();
-                        }
-                    }
-                }).show();
-    }
-
-    private void openTapTargetNew() {
-
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(R.id.map_add)
-                .setPrimaryText(R.string.tap_new_title)
-                .setSecondaryText(R.string.tap_new_subtitle)
-                .setBackgroundColour(getResources().getColor(R.color.tap_background_3))
-                .setAutoDismiss(true)
-                .show();
+        targetSearch.getBuilder().show();
     }
 
     public void openDialog(){
@@ -271,7 +223,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 intentGoForm.putExtra("avaliacao", item);
                 intentGoForm.putExtra("position", position);
 
-                startActivityForResult(intentGoForm, GO_FORM);
+                startActivity(intentGoForm);
             }
         });
         options.create().show();
@@ -300,4 +252,23 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         localizer = new Localizer(getActivity(), googleMap, getView());
     }
 
+    private void defineThemeMap() {
+        if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))){
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
+        } else {
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_default));
+        }
+    }
+
+    private void initializeFirebaseDatabase() {
+        googleMap.clear();
+        mRef = FirebaseDatabase.getInstance()
+                .getReference(getString(R.string.database_posts_name))
+                .orderByChild(getString(R.string.database_posts_data_string))
+                .startAt(DateConvert.addHourInterval(getActivity(), null,
+                        Preferences.getTimeOcurrenceInterval(Objects.requireNonNull(getActivity()))))
+                .getRef();
+
+        mRef.addChildEventListener(this);
+    }
 }
