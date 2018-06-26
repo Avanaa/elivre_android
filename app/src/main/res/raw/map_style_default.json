@@ -1,11 +1,3 @@
 [
-  {
-    "featureType": "administrative.country",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#008040"
-      }
-    ]
-  }
+
 ]
