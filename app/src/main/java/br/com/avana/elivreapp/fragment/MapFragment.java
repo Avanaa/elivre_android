@@ -29,6 +29,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +46,7 @@ import br.com.avana.elivreapp.util.DateConvert;
 import br.com.avana.elivreapp.util.Evaluations;
 import br.com.avana.elivreapp.util.Localizer;
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, ChildEventListener {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     public final static int MY_LOCATION_ENABLE = 1;
 
@@ -59,6 +61,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private Avaliacao item;
     private View locationButton;
     private Localizer localizer;
+    private Query mQuery;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -119,6 +122,9 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 openDialog();
             }
         });
+
+        initializeFirebaseDatabase();
+        defineThemeMap();
     }
 
     public void checkIsFirstTimeSeen() {
@@ -132,10 +138,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onResume() {
         super.onResume();
 
-        if (googleMap != null){
-            initializeFirebaseDatabase();
-            defineThemeMap();
-        }
+        initializeFirebaseDatabase();
+        defineThemeMap();
     }
 
     public void moveMapCamera(LatLng latLng){
@@ -229,30 +233,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         options.create().show();
     }
 
-    @Override
-    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        PostModel post = dataSnapshot.getValue(PostModel.class);
-        MarkerOptions options = getMarkerOptionsByPost(post);
-        googleMap.addMarker(options);
-    }
-
-    @Override
-    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-    @Override
-    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-
-    @Override
-    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {}
-
     public void openLocalizer() {
         localizer = new Localizer(getActivity(), googleMap, getView());
     }
 
     private void defineThemeMap() {
+        if (googleMap == null){ return; }
         if (Preferences.isMapThemeDark(Objects.requireNonNull(getActivity()))){
             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_dark));
         } else {
@@ -261,14 +247,31 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     }
 
     private void initializeFirebaseDatabase() {
+        if (googleMap == null){ return; }
         googleMap.clear();
         mRef = FirebaseDatabase.getInstance()
                 .getReference(getString(R.string.database_posts_name))
-                .orderByChild(getString(R.string.database_posts_data_string))
-                .startAt(DateConvert.addHourInterval(getActivity(), null,
-                        Preferences.getTimeOcurrenceInterval(Objects.requireNonNull(getActivity()))))
                 .getRef();
 
-        mRef.addChildEventListener(this);
+        mQuery = mRef.orderByChild(getString(R.string.database_posts_data_string))
+                .startAt(DateConvert.addHourInterval(getActivity(), null,
+                        Preferences.getTimeOcurrenceInterval(Objects.requireNonNull(getActivity()))));
+
+        mQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshotValues) {
+                for (DataSnapshot dataSnapshot : dataSnapshotValues.getChildren()){
+                    PostModel post = dataSnapshot.getValue(PostModel.class);
+                    MarkerOptions options = getMarkerOptionsByPost(post);
+                    googleMap.addMarker(options);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
