@@ -272,6 +272,5 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
             }
         });
-
     }
 }

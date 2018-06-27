@@ -55,7 +55,7 @@
 
     <!-- Form -->
     <string name="title_activity_form">Nova Ocorrência</string>
-    <string name="form_datetime_format">yyyy-MM-dd H:mm:ss</string>
+    <string name="form_datetime_format">yyyy-MM-dd HH:mm:ss</string>
     <string name="form_enviado">Enviado!</string>
     <string name="form_send_title">"Enviado"</string>
     <string name="form_send_subtitle">Ocorrência enviada com sucesso.</string>
