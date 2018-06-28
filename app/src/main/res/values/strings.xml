@@ -46,6 +46,11 @@
 
     <!-- Login -->
     <string name="title_activity_login">Login</string>
+    <string name="login_google_login">Continue with Google</string>
+    <string name="login_twitter_login">Continue with Twitter</string>
+
+    <!-- Logout -->
+    <string name="logout_logout">Sair</string>
 
     <!-- Map -->
     <string name="title_activity_map">Mapa</string>
@@ -77,5 +82,8 @@
     <string name="action_settings">Configurações</string>
     <string name="action_search">Pesquisar</string>
     <string name="action_save">Salvar</string>
+    <string name="action_sign_out">Sair</string>
+    <string name="sign_out">SIGN_OUT</string>
+
 
 </resources>

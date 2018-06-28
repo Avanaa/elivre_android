@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_save"
-        android:title="@string/action_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:id="@+id/action_signout"
+        android:title="@string/action_sign_out"
+        android:icon="@android:drawable/ic_lock_power_off"
         app:showAsAction="always"
         />
 </menu>

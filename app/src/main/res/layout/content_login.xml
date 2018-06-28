@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -12,37 +11,35 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        >
-        <!--tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">-->
-
-
+        android:orientation="vertical">
+        <!--
         <Button
             android:id="@+id/login_twitter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:layout_margin="20dp"
-            android:background="@drawable/com_facebook_button_background"
-            android:elevation="1dp"
-            android:text="Facebook"
-            android:textColor="#fff" />
-
+            android:background="#55acee"
+            android:drawableStart="@drawable/ic_twitter"
+            android:text="@string/login_twitter_login"
+            android:textColor="#FFF"
+            android:textAllCaps="false"/>
+        -->
         <Button
             android:id="@+id/login_google"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:layout_margin="20dp"
-            android:background="#dd5144"
-            android:text="Google +"
-            android:textColor="#fff" />
+            android:background="#dd4b39"
+            android:drawableStart="@drawable/ic_google"
+            android:text="@string/login_google_login"
+            android:textColor="#fff"
+            android:textAllCaps="false"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Twitter" />
+            android:layout_margin="20dp" />
 
     </LinearLayout>
 

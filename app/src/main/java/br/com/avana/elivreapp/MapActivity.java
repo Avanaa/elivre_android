@@ -29,6 +29,8 @@ import br.com.avana.elivreapp.util.Localizer;
 public class MapActivity extends AppCompatActivity {
 
     private static final int GO_SEARCH = 2;
+    public static final int GO_SETTINGS = 3;
+
     private MapFragment fragment;
 
     @Override
@@ -81,7 +83,7 @@ public class MapActivity extends AppCompatActivity {
 
             case R.id.action_settings:
                 Intent goSettings = new Intent(this, SettingsActivity.class);
-                startActivity(goSettings);
+                startActivityForResult(goSettings, GO_SETTINGS);
         }
         return true;
     }
@@ -92,6 +94,15 @@ public class MapActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK){
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 fragment.moveMapCamera(place.getLatLng());
+            }
+        }
+
+        if  (requestCode == GO_SETTINGS){
+            if (resultCode == LoginActivity.SIGN_OUT){
+                Intent signOut = new Intent(this, LoginActivity.class);
+                signOut.putExtra("SIGN_OUT", true);
+                startActivity(signOut);
+                finish();
             }
         }
     }

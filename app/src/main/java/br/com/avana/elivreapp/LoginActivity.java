@@ -32,11 +32,15 @@ import com.facebook.appevents.AppEventsLogger;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int LOGIN_GOOGLE = 1;
     private FirebaseAuth auth;
     private GoogleSignInOptions gso;
     private GoogleApiClient googleApiClient;
     private final String ID_TOKEN = "645646021352-j0tq2h98pmi5eif8lo2ajridcmd8eank.apps.googleusercontent.com";
     private CallbackManager callbackManager;
+    public static final int SIGN_OUT = 4;
+    private LoginButton facebookLogin;
+    private Button googleLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,14 @@ public class LoginActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(getApplication());
         auth = FirebaseAuth.getInstance();
 
-        // Google login
+        Intent intent = getIntent();
+        if (intent != null){
+            boolean signOut = intent.getBooleanExtra(getString(R.string.sign_out), false);
+            if (signOut){
+                auth.signOut();
+            }
+        }
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(ID_TOKEN)
                 .requestEmail()
@@ -60,18 +71,18 @@ public class LoginActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        Button googleLogin = findViewById(R.id.login_google);
+        googleLogin = findViewById(R.id.login_google);
+
         googleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(signInIntent, 1);
+                startActivityForResult(signInIntent, LOGIN_GOOGLE);
             }
         });
 
-        // Facebook login
         callbackManager = CallbackManager.Factory.create();
-        LoginButton facebookLogin = findViewById(R.id.login_facebook);
+        facebookLogin = findViewById(R.id.login_facebook);
         facebookLogin.setReadPermissions("email", "public_profile");
 
         facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -88,11 +99,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    protected void onStart() {
-        super.onStart();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateUi(auth.getCurrentUser());
-    }*/
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,12 +113,12 @@ public class LoginActivity extends AppCompatActivity {
 
         switch (requestCode){
 
-            case 1:
+            case LOGIN_GOOGLE:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()){
                     GoogleSignInAccount signInAccount = result.getSignInAccount();
                     firebaseAuthWithGoogle(signInAccount);
-                } else {
+                    
                 }
         }
     }
@@ -150,8 +162,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(goMap);
             finish();
         } else {
-            //Exibir mensagem de usuário não logado
-            finish();
+            Toast.makeText(this, "Faça Login para acessar as ocorrências", Toast.LENGTH_LONG).show();
         }
     }
 }
